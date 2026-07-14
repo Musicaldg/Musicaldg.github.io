@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Career · Wuwubo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="My professional journey — open source, agent memory research, and beyond.">
+  <meta property="og:title" content="Career">
+  <meta property="og:url" content="https://musicaldg.github.io/career/">
+  <link rel="shortcut icon" href="/favicon.png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <a href="/" class="nav-logo">Wuwubo</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a href="/career/" class="active">Career</a></li>
+      <li><a href="/hobbies/">Hobbies</a></li>
+    </ul>
+    <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+  </nav>
+  <div class="page-frame">
+    <div class="page-columns">
+      <div class="page-col-content">
+        <div class="career-page">
+          <div class="container">
+            <div class="page-header" style="padding-top:0;padding-bottom:0">
+              <a href="/" class="back-link"><i class="fa fa-arrow-left"></i> Back to Home</a>
+              <h1>Career</h1>
+              <p class="page-desc">My professional journey — from open-source contributions to agent memory research.</p>
+            </div>
+          </div>
+          <aside class="career-timeline-nav">
+            <div class="timeline-rail">
+              <div class="timeline-dot" data-target="shadowweave">
+                <div class="dot-visual"></div>
+                <span class="dot-label">2026.8</span>
+                <div class="dot-hover-card">
+                  <span class="dhc-date">May – Aug 2026</span>
+                  <strong>ShadowWeave</strong>
+                  <span>AI Algorithm Engineer Intern</span>
+                </div>
+              </div>
+              <div class="timeline-dot" data-target="easygraph">
+                <div class="dot-visual"></div>
+                <span class="dot-label">2026.5</span>
+                <div class="dot-hover-card">
+                  <span class="dhc-date">Feb – May 2026</span>
+                  <strong>EasyGraph</strong>
+                  <span>C++ High-Performance Module</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+          <div class="career-layout">
+            <div class="career-cards">
+              <!-- ShadowWeave -->
+              <div id="shadowweave" class="career-card-wrapper">
+                <div class="card career-card">
+                  <div class="career-card-header">
+                    <div class="career-card-meta">
+                      <span class="career-tag" style="background:var(--tag-red-bg);color:var(--tag-red)">Internship</span>
+                      <span class="career-date">May 2026 – Aug 2026</span>
+                    </div>
+                    <h3>AI Algorithm Engineer Intern</h3>
+                    <p class="career-company">@ ShadowWeave</p>
+                  </div>
+                  <div class="career-card-body">
+                    <p>Conduct research on agent memory, develop and optimize advanced agent memory systems.</p>
+                    <div class="career-toggle">
+                      <a href="#" class="career-toggle-btn"><span>Read more</span> <i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="career-detail" style="display:none">
+                      <div class="career-section">
+                        <h4>My Contribution</h4>
+                        <ol>
+                          <li><strong>Optimized agent memory system:</strong> By injecting propagation search on graph and recall planner mechanisms, achieved SOTA on two benchmarks — significantly improving overall accuracy on LongMemEval and LoCoMo using GPT-5-mini as ingestion, generation, and judge model.</li>
+                          <li><strong>Experiments &amp; tech report:</strong> Tested our system and baselines (Plugmem, Mastra, Hindsight, AgentMemory) on alignment. Responsible for the experimental section and relevant methodology parts of the technical report. Revised academic narratives.</li>
+                        </ol>
+                      </div>
+                      <div class="career-section">
+                        <h4>What I Harvested</h4>
+                        <p>I gained a comprehensive understanding of existing agent memory systems — especially the current bottleneck in the field. Most existing systems are explicit: storing and retrieving structured information through layered, classified retrieval channels to cover different patterns. This approach is practical in engineering, but in my view, it is not the ultimate form of memory.</p>
+                        <p>Explicit memory is not coupled with reasoning. It cannot evolve or continuously learn like human memory. Meanwhile, latent memory faces its own challenges: tight coupling with the inference side makes transfer between models difficult. I attempted to replicate a well-known open-source latent memory system and found methodological issues — it relies on attention computation in context rather than actual latent space compression.</p>
+                        <p>However, in world models — especially embodied scenes and long video generation — memory is native. These scenarios are inherently time-sensitive and non-Markovian. Effective memory can prevent long-horizon drift in video generation, assist embodied AI in completing temporal-dependent tasks, and enhance controllability.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- EasyGraph -->
+              <div id="easygraph" class="career-card-wrapper">
+                <div class="card career-card">
+                  <div class="career-card-header">
+                    <div class="career-card-meta">
+                      <span class="career-tag" style="background:rgba(5,150,105,0.1);color:var(--tag-emerald)">Open Source</span>
+                      <span class="career-date">Feb 2026 – May 2026</span>
+                    </div>
+                    <h3>EasyGraph C++ High-Performance Development</h3>
+                    <p class="career-company">Open Source Contribution</p>
+                  </div>
+                  <div class="career-card-body">
+                    <p>Independently built a high-performance C++ implementation of the community detection module for the EasyGraph open-source library, with optimized parallel execution for large-scale graph analysis.</p>
+                    <div class="career-toggle">
+                      <a href="#" class="career-toggle-btn"><span>Read more</span> <i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="career-detail" style="display:none">
+                      <div class="career-section">
+                        <p>The EasyGraph library provides graph algorithms for network analysis. My work focused on the community detection module — a core component for identifying densely connected subgraphs in large networks. The C++ implementation achieves significant performance gains over the Python baseline through optimized memory access patterns and parallel processing.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class="separator">
+        <footer class="footer">
+          <div class="container">
+            <div class="footer-inner">
+              <div class="footer-social">
+                <a href="https://github.com/Musicaldg" target="_blank"><i class="fa fa-github"></i></a>
+                <a href="mailto:wuwubo@fudan.edu.cn"><i class="fa fa-envelope"></i></a>
+                <a href="/atom.xml"><i class="fa fa-rss"></i></a>
+              </div>
+              <p class="footer-copy">&copy; 2026 Wuwubo</p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+  <script src="/js/jquery-3.6.4.min.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>
