@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://musicaldg.github.io/sitemap.xml
