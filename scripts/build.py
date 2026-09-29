@@ -164,13 +164,13 @@ def build():
         item = ET.SubElement(channel, 'item')
         for key, value in [('title', post['title']), ('link', config['url'] + '/blog/' + post['slug'] + '/'), ('guid', config['url'] + '/blog/' + post['slug'] + '/'), ('description', post['summary']), ('pubDate', dt.datetime.strptime(post['date'], '%Y-%m-%d').strftime('%a, %d %b %Y 00:00:00 GMT'))]:
             ET.SubElement(item, key).text = value
-    write('feed.xml', ET.tostring(feed, encoding='unicode', xml_declaration=True))
+    write('feed.xml', ET.tostring(feed, encoding='utf-8', xml_declaration=True).decode('utf-8'))
     sitemap = ET.Element('urlset', xmlns='http://www.sitemaps.org/schemas/sitemap/0.9')
     for path in generated:
         if path.endswith('index.html'):
             entry = ET.SubElement(sitemap, 'url')
             ET.SubElement(entry, 'loc').text = config['url'] + ('/' if path == 'index.html' else '/' + path.removesuffix('index.html'))
-    write('sitemap.xml', ET.tostring(sitemap, encoding='unicode', xml_declaration=True))
+    write('sitemap.xml', ET.tostring(sitemap, encoding='utf-8', xml_declaration=True).decode('utf-8'))
     write('robots.txt', 'User-agent: *\nAllow: /\nSitemap: ' + config['url'] + '/sitemap.xml')
     for obsolete in set(previous) - set(generated):
         if obsolete.startswith('blog/') and obsolete.endswith('/index.html'):
