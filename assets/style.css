@@ -35,7 +35,7 @@ main { flex: 1; }
 .article h1 { font: normal clamp(27px, 4vw, 36px)/1.5 var(--serif); margin: 30px 0 15px; }
 .article-meta { font-size: 11px; color: var(--muted); padding-bottom: 25px; margin-bottom: 32px; border-bottom: 1px solid var(--line); }
 .text-link { font-size: 12px; color: var(--muted); }
-.prose { font-size: 16px; line-height: 1.95; overflow-wrap: anywhere; }
+.prose { font-size: 16px; line-height: 1.8; overflow-wrap: anywhere; }
 .prose h2, .prose h3 { font-family: var(--serif); font-weight: normal; line-height: 1.5; margin-top: 36px; }
 .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .prose pre { overflow: auto; background: #f0f1eb; padding: 20px; font-size: 13px; line-height: 1.7; }
@@ -72,15 +72,15 @@ main { flex: 1; }
 .article { min-width: 0; margin: 0; padding: 42px 48px 50px; background: #fffefa; border: 1px solid var(--line); border-radius: 14px; }
 .article h1 { font-size: clamp(27px, 3vw, 35px); line-height: 1.5; letter-spacing: -.02em; margin: 26px 0 20px; }
 .article-meta { display: flex; flex-wrap: wrap; gap: 20px; padding-bottom: 26px; margin-bottom: 30px; }
-.prose { color: #3e413b; line-height: 2; }
-.prose p { margin: 0 0 22px; }
-.prose h2 { color: var(--ink); font-size: 25px; margin: 52px 0 22px; }
-.prose h3 { color: var(--ink); font-size: 21px; margin: 34px 0 18px; }
+.prose { color: #3e413b; line-height: 1.8; }
+.prose p { margin: 0 0 16px; }
+.prose h2 { color: var(--ink); font-size: 25px; margin: 40px 0 18px; }
+.prose h3 { color: var(--ink); font-size: 21px; margin: 28px 0 14px; }
 .prose h2, .prose h3 { scroll-margin-top: 35px; }
 .prose strong { font-weight: 600; }
-.prose ul, .prose ol { padding-left: 24px; margin: 20px 0 26px; }
-.prose li { padding-left: 4px; margin-bottom: 10px; }
-.math-block { overflow-x: auto; overflow-y: hidden; padding: 8px 4px; margin: 18px 0 26px; max-width: 100%; }
+.prose ul, .prose ol { padding-left: 24px; margin: 16px 0 20px; }
+.prose li { padding-left: 4px; margin-bottom: 6px; }
+.math-block { overflow-x: auto; overflow-y: hidden; padding: 8px 4px; margin: 16px 0 20px; max-width: 100%; }
 .math-block .katex-display { margin: .6em 0; }
 .math-block .katex-display > .katex { white-space: nowrap; }
 .prose .katex { font-size: 1.08em; }
@@ -108,7 +108,7 @@ main { flex: 1; }
   .article-layout { padding-top: 20px; }
   .article { padding: 28px 22px 36px; border-radius: 10px; }
   .article h1 { font-size: 27px; }
-  .prose { font-size: 15px; line-height: 1.95; }
+  .prose { font-size: 15px; line-height: 1.8; }
   .prose h2 { font-size: 23px; }
   .prose h3 { font-size: 20px; }
   .prose .katex { font-size: 1em; }
