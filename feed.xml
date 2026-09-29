@@ -1,2 +1,2 @@
 <?xml version='1.0' encoding='utf-8'?>
-<rss version="2.0"><channel><title>Musicaldg</title><link>https://musicaldg.github.io</link><description>Musicaldg 的机器学习笔记。</description><language>zh-CN</language></channel></rss>
+<rss version="2.0"><channel><title>Musicaldg</title><link>https://musicaldg.github.io</link><description>Musicaldg 的机器学习笔记。</description><language>zh-CN</language><item><title>Active Learning：从预测不确定性到模型分歧</title><link>https://musicaldg.github.io/blog/active-learning/</link><guid>https://musicaldg.github.io/blog/active-learning/</guid><description>用熵、KL 散度和一个二分类例子，理解 Uncertainty Sampling、Query-by-Committee 与 BALD 如何选择值得标注的样本。</description><pubDate>Tue, 29 Sep 2026 00:00:00 GMT</pubDate></item></channel></rss>

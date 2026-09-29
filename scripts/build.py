@@ -3,6 +3,7 @@
 import datetime as dt
 import html
 import json
+import math
 import re
 from pathlib import Path
 from string import Template
@@ -29,6 +30,7 @@ def inline(value):
         return f'\x00{len(tokens)-1}\x00'
 
     value = re.sub(r'`([^`]+)`', lambda m: protect('<code>' + esc(m[1]) + '</code>'), value)
+    value = re.sub(r'\$([^$\n]+)\$', lambda m: protect('<span class="math">' + esc(m[1]) + '</span>'), value)
     value = re.sub(r'!\[([^\]]*)\]\(([^\s)]+)\)', lambda m: protect(f'<img src="{esc(safe_url(m[2]))}" alt="{esc(m[1])}" loading="lazy">'), value)
     value = re.sub(r'\[([^\]]+)\]\(([^\s)]+)\)', lambda m: protect(f'<a href="{esc(safe_url(m[2]))}">{esc(m[1])}</a>'), value)
     value = esc(value)
@@ -41,6 +43,8 @@ def markdown(source):
     result, paragraph, items, quote, code = [], [], [], [], []
     listing = None
     fence = None
+    equation = None
+    heading_count = 0
 
     def flush():
         nonlocal listing
@@ -56,6 +60,17 @@ def markdown(source):
             quote.clear()
 
     for line in source.splitlines():
+        if fence is None and line.strip() == '$$':
+            if equation is None:
+                flush()
+                equation = []
+            else:
+                result.append('<div class="math math-block">' + esc('\n'.join(equation)) + '</div>')
+                equation = None
+            continue
+        if equation is not None:
+            equation.append(line)
+            continue
         if line.startswith('```'):
             if fence is not None:
                 result.append('<pre><code>' + esc('\n'.join(code)) + '</code></pre>')
@@ -75,8 +90,9 @@ def markdown(source):
         item = re.match(r'^\s*(?:([-*])|\d+\.)\s+(.+)$', line)
         if heading:
             flush()
+            heading_count += 1
             level = len(heading[1])
-            result.append(f'<h{level}>' + inline(heading[2]) + f'</h{level}>')
+            result.append(f'<h{level} id="section-{heading_count}">' + inline(heading[2]) + f'</h{level}>')
         elif item:
             kind = 'ul' if item[1] else 'ol'
             if paragraph or quote or (listing and kind != listing):
@@ -96,6 +112,8 @@ def markdown(source):
             paragraph.append(line.strip())
     if fence is not None:
         raise ValueError('代码块未闭合')
+    if equation is not None:
+        raise ValueError('公式块未闭合')
     flush()
     return '\n'.join(result)
 
@@ -124,7 +142,14 @@ def read_posts():
         rendered = markdown(parts[2].strip())
         if meta['draft'] == 'true':
             continue
-        meta.update(slug=path.stem, body=rendered)
+        source = parts[2].strip()
+        headings = re.findall(r'<h([23]) id="([^"]+)">(.*?)</h\1>', rendered)
+        toc = ''.join(f'<a class="toc-level-{level}" href="#{anchor}">{esc(html.unescape(re.sub(r"<[^>]+>", "", text)))}</a>' for level, anchor, text in headings)
+        plain = re.sub(r'\$\$[\s\S]*?\$\$|\$[^$\n]+\$', '', source)
+        chinese = len(re.findall(r'[\u4e00-\u9fff]', plain))
+        words = len(re.findall(r'[A-Za-z]+', plain))
+        minutes = max(1, math.ceil(chinese / 400 + words / 200 + source.count('$$') / 2 * .2))
+        meta.update(slug=path.stem, body=rendered, toc=toc, minutes=minutes)
         posts.append(meta)
     return sorted(posts, key=lambda x: (x['date'], x['slug']), reverse=True)
 
@@ -144,17 +169,18 @@ def build():
 
     def page(path, title, description, body, current='', og_type='website'):
         url_path = '/' if path == 'index.html' else '/' + path.removesuffix('index.html')
-        write(path, layout.substitute(name=esc(config['name']), github=esc(config['github']), year=dt.date.today().year, title=esc(title), description=esc(description), canonical=esc(config['url'] + url_path), body=body, home_current='aria-current="page"' if current == 'home' else '', blog_current='aria-current="page"' if current == 'blog' else '', og_type=og_type))
+        write(path, layout.substitute(name=esc(config['name']), github=esc(config['github']), year=dt.date.today().year, title=esc(title), description=esc(description), canonical=esc(config['url'] + url_path), body=body, home_current='aria-current="page"' if current == 'home' else '', blog_current='aria-current="page"' if current == 'blog' else '', og_type=og_type, page_class='article-page' if og_type == 'article' else '', article_assets='<link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/assets/vendor/katex/katex.min.js"></script><script defer src="/assets/article.js"></script>' if og_type == 'article' else ''))
 
     def rows(selected):
-        return ''.join(f'<a class="post-row" href="/blog/{p["slug"]}/"><time class="post-date" datetime="{p["date"]}">{p["date"]}</time><div><h3>{esc(p["title"])}</h3><p>{esc(p["summary"])}</p></div><span class="post-arrow" aria-hidden="true">↗</span></a>' for p in selected) or EMPTY
+        return ''.join(f'<a class="post-card" href="/blog/{p["slug"]}/"><div class="card-meta"><time datetime="{p["date"]}">{p["date"]}</time><span>约 {p["minutes"]} 分钟</span></div><h3>{esc(p["title"])}</h3><p>{esc(p["summary"])}</p><span class="card-open">阅读全文 <span aria-hidden="true">↗</span></span></a>' for p in selected) or EMPTY
 
     home = Template((ROOT / 'templates/home.html').read_text(encoding='utf-8')).substitute(name=esc(config['name']), github=esc(config['github']), posts=rows(posts[:5]))
     page('index.html', config['name'], config['description'], home, 'home')
     page('blog/index.html', '文章 · ' + config['name'], '机器学习笔记。', '<div class="page-intro"><h1>文章</h1></div><section class="post-list">' + rows(posts) + '</section>', 'blog')
     page('404.html', '页面未找到 · ' + config['name'], '页面未找到', '<div class="not-found"><h1>404</h1><p>页面未找到</p><a class="text-link" href="/">回到首页 ↗</a></div>')
     for post in posts:
-        body = f'<article class="article"><a class="text-link" href="/blog/">← 全部文章</a><h1>{esc(post["title"])}</h1><div class="article-meta"><time datetime="{post["date"]}">{post["date"]}</time> · {esc(config["name"])}</div><div class="prose">{post["body"]}</div></article>'
+        toc = '<nav class="toc-links" aria-label="文章目录">' + post['toc'] + '</nav>'
+        body = f'<div class="article-layout"><article class="article"><a class="text-link" href="/blog/">← 全部文章</a><h1>{esc(post["title"])}</h1><div class="article-meta"><time datetime="{post["date"]}">{post["date"]}</time><span>预计阅读 {post["minutes"]} 分钟</span></div><details class="mobile-toc"><summary>目录</summary>{toc}</details><div class="prose">{post["body"]}</div></article><aside class="desktop-toc"><div class="toc-title">目录</div>{toc}</aside></div>'
         page(f'blog/{post["slug"]}/index.html', post['title'] + ' · ' + config['name'], post['summary'], body, 'blog', 'article')
     feed = ET.Element('rss', version='2.0')
     channel = ET.SubElement(feed, 'channel')

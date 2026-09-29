@@ -15,6 +15,7 @@ if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/master)" ]; then
   exit 1
 fi
 python3 scripts/build.py
+python3 scripts/check.py
 git add -A
 git diff --cached --check
 if git diff --cached --quiet; then
