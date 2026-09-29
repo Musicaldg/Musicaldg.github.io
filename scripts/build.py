@@ -10,7 +10,7 @@ from urllib.parse import urlsplit
 from xml.etree import ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
-EMPTY = '<div class="empty"><span class="empty-icon" aria-hidden="true">✳</span><div><h3>第一篇文章，正在酝酿。</h3><p>这里将收录研究笔记、想法与日常记录。期待与你分享。</p></div></div>'
+EMPTY = ''
 
 
 def esc(value):
@@ -150,9 +150,9 @@ def build():
         return ''.join(f'<a class="post-row" href="/blog/{p["slug"]}/"><time class="post-date" datetime="{p["date"]}">{p["date"]}</time><div><h3>{esc(p["title"])}</h3><p>{esc(p["summary"])}</p></div><span class="post-arrow" aria-hidden="true">↗</span></a>' for p in selected) or EMPTY
 
     home = Template((ROOT / 'templates/home.html').read_text(encoding='utf-8')).substitute(name=esc(config['name']), github=esc(config['github']), posts=rows(posts[:5]))
-    page('index.html', config['name'] + ' · 个人手记', config['description'], home, 'home')
-    page('blog/index.html', '文章 · ' + config['name'], '研究笔记、想法与日常记录。', '<div class="page-intro"><div class="eyebrow">The notebook / 文章归档</div><h1>文字与思考</h1><p>把零散的灵光，写成可以重访的文字。</p></div><section class="section">' + rows(posts) + '</section>', 'blog')
-    page('404.html', '页面未找到 · ' + config['name'], '页面未找到', '<div class="not-found"><div class="eyebrow">404 / 迷路了</div><h1>这页还没有写下。</h1><a class="text-link" href="/">回到首页 ↗</a></div>')
+    page('index.html', config['name'], config['description'], home, 'home')
+    page('blog/index.html', '文章 · ' + config['name'], '机器学习笔记。', '<div class="page-intro"><h1>文章</h1></div><section class="post-list">' + rows(posts) + '</section>', 'blog')
+    page('404.html', '页面未找到 · ' + config['name'], '页面未找到', '<div class="not-found"><h1>404</h1><p>页面未找到</p><a class="text-link" href="/">回到首页 ↗</a></div>')
     for post in posts:
         body = f'<article class="article"><a class="text-link" href="/blog/">← 全部文章</a><h1>{esc(post["title"])}</h1><div class="article-meta"><time datetime="{post["date"]}">{post["date"]}</time> · {esc(config["name"])}</div><div class="prose">{post["body"]}</div></article>'
         page(f'blog/{post["slug"]}/index.html', post['title'] + ' · ' + config['name'], post['summary'], body, 'blog', 'article')
