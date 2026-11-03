@@ -9,17 +9,36 @@
   --bg-100: #fffefb;
   --bg-200: #f5f4f1;
   --bg-300: #cccbc8;
+  --page-wash: #c8e4f4;
+  --page-wash-deep: #a9d3eb;
   --serif: Georgia, 'Songti SC', 'Noto Serif SC', serif;
   --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
 }
 * { box-sizing: border-box; }
+html {
+  background: var(--page-wash);
+  scroll-behavior: smooth;
+}
 body {
   margin: 0;
-  background:
-    radial-gradient(ellipse 90% 42% at 50% -8%, var(--primary-100), transparent 68%),
-    var(--bg-100);
+  min-height: 100svh;
   color: var(--text-100);
   font: 15px/1.85 var(--sans);
+  background: transparent;
+  position: relative;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--page-wash);
+  background-image:
+    radial-gradient(ellipse 95% 70% at 50% 18%, #9ecfec 0%, transparent 62%),
+    radial-gradient(ellipse 52% 58% at 0% 48%, color-mix(in srgb, var(--accent-100) 46%, transparent), transparent 72%),
+    radial-gradient(ellipse 54% 60% at 100% 52%, color-mix(in srgb, #95cceb 75%, var(--accent-100)), transparent 74%),
+    radial-gradient(ellipse 80% 55% at 50% 100%, var(--page-wash-deep), transparent 68%);
 }
 a { color: inherit; text-decoration: none; }
 a:hover { color: var(--accent-200); }
@@ -75,7 +94,24 @@ main { flex: 1; }
 .article-meta { font-size: 12px; color: var(--text-200); padding-bottom: 25px; margin-bottom: 32px; border-bottom: 1px solid var(--primary-200); }
 .text-link { font-size: 13px; color: var(--accent-200); }
 .prose { font-size: 16px; line-height: 1.8; overflow-wrap: anywhere; color: var(--text-100); }
-.prose h2, .prose h3 { font-family: var(--serif); font-weight: normal; line-height: 1.45; margin-top: 36px; scroll-margin-top: 28px; }
+.prose h2, .prose h3 {
+  font-family: var(--serif);
+  font-weight: normal;
+  line-height: 1.45;
+  margin-top: 36px;
+  scroll-margin-top: 28px;
+  border-radius: 8px;
+  transition: background-color .35s ease;
+}
+.prose h2.heading-flash,
+.prose h3.heading-flash {
+  animation: heading-flash .95s ease;
+}
+@keyframes heading-flash {
+  0% { background-color: color-mix(in srgb, var(--primary-100) 88%, transparent); }
+  55% { background-color: color-mix(in srgb, var(--accent-100) 22%, transparent); }
+  100% { background-color: transparent; }
+}
 .prose a { color: var(--accent-200); text-decoration: underline; text-underline-offset: 3px; }
 .prose pre { overflow: auto; background: var(--bg-200); border: 1px solid var(--bg-300); border-radius: 10px; padding: 18px 20px; font-size: 13px; line-height: 1.7; }
 .prose code { background: var(--bg-200); border-radius: 4px; padding: 1px 5px; font-size: .9em; }
@@ -139,6 +175,10 @@ main { flex: 1; }
   .page-intro h1 { font-size: 26px; }
 }
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   .post-card { transition: none; }
   .post-card:hover { transform: none; }
+  .prose h2, .prose h3 { transition: none; }
+  .prose h2.heading-flash,
+  .prose h3.heading-flash { animation: none; }
 }
