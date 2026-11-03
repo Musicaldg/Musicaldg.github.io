@@ -1,8 +1,22 @@
 <div class="geometry" aria-hidden="true">
   <div class="geometry-glow">
-    <img class="geometry-mark" src="/assets/geometry.svg" alt="" width="320" height="220">
+    <div class="geometry-stage">
+      <img class="geometry-mark" src="/assets/geometry.svg" alt="" width="320" height="220">
+    </div>
   </div>
 </div>
-<section class="home-feed" aria-label="文章与系列">
+<section class="dash-panel dash-news" aria-label="近况">
+  <div class="dash-head">
+    <h2>近况</h2>
+  </div>
+  $news
+</section>
+<section class="dash-panel dash-writing" aria-label="最新写作">
+  <div class="dash-head">
+    <h2>最新写作</h2>
+    <a class="dash-more" href="/blog/">全部文章 <span aria-hidden="true">↗</span></a>
+  </div>
+  <div class="home-feed">
 $feed
+  </div>
 </section>
