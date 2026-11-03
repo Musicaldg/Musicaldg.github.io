@@ -15,7 +15,31 @@ document.querySelectorAll('.math').forEach(element => {
 
 const headings = Array.from(document.querySelectorAll('.prose h2, .prose h3'));
 const links = Array.from(document.querySelectorAll('.toc-links a'));
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let pending = false;
+let flashTimer = 0;
+
+function flashHeading(heading) {
+  if (!heading || reduceMotion) return;
+  heading.classList.remove('heading-flash');
+  void heading.offsetWidth;
+  heading.classList.add('heading-flash');
+  window.clearTimeout(flashTimer);
+  flashTimer = window.setTimeout(() => heading.classList.remove('heading-flash'), 1000);
+}
+
+function scrollToHeading(heading, updateHistory) {
+  if (!heading) return;
+  heading.scrollIntoView({
+    behavior: reduceMotion ? 'auto' : 'smooth',
+    block: 'start'
+  });
+  if (updateHistory) {
+    history.pushState(null, '', '#' + heading.id);
+  }
+  flashHeading(heading);
+}
+
 function updateDirectory() {
   const current = headings.filter(heading => heading.getBoundingClientRect().top <= 140).pop() || headings[0];
   links.forEach(link => {
@@ -26,10 +50,28 @@ function updateDirectory() {
   });
   pending = false;
 }
+
+links.forEach(link => {
+  link.addEventListener('click', event => {
+    const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+    if (!heading) return;
+    event.preventDefault();
+    scrollToHeading(heading, true);
+  });
+});
+
 window.addEventListener('scroll', () => {
   if (!pending) {
     pending = true;
     requestAnimationFrame(updateDirectory);
   }
 }, {passive: true});
+
+if (location.hash) {
+  const initial = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (initial) {
+    window.setTimeout(() => flashHeading(initial), 80);
+  }
+}
+
 updateDirectory();
