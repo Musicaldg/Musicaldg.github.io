@@ -124,7 +124,7 @@ $$
 
 KL 散度非负，两个分布一致时为零。它一般不对称，因此不是通常意义上的距离。如果某个结果在 $p$ 下概率非零、在 $q$ 下概率为零，KL 散度会趋于无穷大。
 
-这个工具会在 BALD 中再次出现：我们不仅关心预测是否模糊，也关心不同模型给出的预测有多不同。
+这个工具会在 BALD 中再次出现：我们不仅关心预测是否模糊，也关心不同模型给出的预测有多不同。后续模仿学习笔记还会用 KL 比较专家与学习策略的动作分布，见 [Behavior Cloning 与 PLID](/blog/behavior-cloning-plid/)。
 
 ## 4. Query-by-Committee
 
@@ -278,3 +278,4 @@ $$
 
 - [课程讲义](https://github.com/enalisnick/enalisnick.github.io/blob/master/ML_with_Humans_Course_Notes.pdf)
 - [BALD 论文](https://arxiv.org/abs/1112.5745)
+- 系列后续：[Behavior Cloning 与 PLID](/blog/behavior-cloning-plid/)、[Distribution Matching 与 GAIL](/blog/distribution-matching-gail/)
