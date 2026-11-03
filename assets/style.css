@@ -78,13 +78,217 @@ main { flex: 1; }
   50% { transform: scale(1.035); filter: saturate(1.12); }
 }
 .post-list { display: grid; gap: 18px; padding-bottom: 64px; }
-.post-list-compact {
-  gap: 10px;
+.post-list:empty { padding: 0; }
+.home-feed {
+  display: grid;
+  gap: 12px;
   max-width: 560px;
   margin: 0 auto;
   padding-bottom: 56px;
 }
-.post-list:empty { padding: 0; }
+.series-folder {
+  border: 1px solid var(--bg-300);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--primary-100) 55%, var(--bg-100)), var(--bg-100) 42%);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--primary-300) 5%, transparent);
+  overflow: hidden;
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.series-folder[open],
+.series-folder.is-open {
+  border-color: var(--primary-200);
+  box-shadow: 0 16px 34px color-mix(in srgb, var(--accent-200) 12%, transparent);
+}
+.series-folder-summary {
+  list-style: none;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  align-items: center;
+  cursor: pointer;
+  padding: 16px 18px;
+  user-select: none;
+}
+.series-folder-summary::-webkit-details-marker { display: none; }
+.series-folder-mark {
+  position: relative;
+  width: 42px;
+  height: 34px;
+  flex-shrink: 0;
+}
+.series-folder-tab,
+.series-folder-body,
+.series-folder-stack {
+  position: absolute;
+  display: block;
+  border: 1.5px solid color-mix(in srgb, var(--accent-200) 55%, var(--primary-200));
+  background: color-mix(in srgb, var(--primary-100) 70%, var(--bg-100));
+}
+.series-folder-tab {
+  left: 2px;
+  top: 2px;
+  width: 18px;
+  height: 10px;
+  border-radius: 6px 8px 0 0;
+  border-bottom: 0;
+}
+.series-folder-body {
+  left: 0;
+  top: 10px;
+  width: 100%;
+  height: 22px;
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent-100) 35%, var(--bg-100)), var(--bg-100));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent);
+  transition: transform .28s ease;
+}
+.series-folder-stack {
+  left: 6px;
+  top: 16px;
+  width: calc(100% - 12px);
+  height: 14px;
+  border-radius: 5px;
+  opacity: .55;
+  transform: translateY(0);
+  transition: transform .28s ease, opacity .28s ease;
+}
+.series-folder[open] .series-folder-body,
+.series-folder.is-open .series-folder-body {
+  transform: translateY(-2px) rotate(-2deg);
+}
+.series-folder[open] .series-folder-stack,
+.series-folder.is-open .series-folder-stack {
+  opacity: .9;
+  transform: translateY(4px);
+}
+.series-folder-copy { display: grid; gap: 2px; min-width: 0; }
+.series-folder-kicker,
+.series-page-kicker {
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--accent-200);
+}
+.series-folder-title {
+  font: normal 22px/1.35 var(--serif);
+  letter-spacing: -.02em;
+  color: var(--text-100);
+}
+.series-folder-meta {
+  font-size: 12px;
+  color: var(--text-200);
+  font-variant-numeric: tabular-nums;
+}
+.series-folder-chevron {
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--accent-200);
+  border-bottom: 2px solid var(--accent-200);
+  transform: rotate(45deg);
+  transition: transform .28s ease;
+  margin-right: 4px;
+}
+.series-folder[open] .series-folder-chevron,
+.series-folder.is-open .series-folder-chevron {
+  transform: rotate(225deg);
+}
+.series-folder-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .36s ease;
+}
+.series-folder[open] .series-folder-panel,
+.series-folder.is-open .series-folder-panel {
+  grid-template-rows: 1fr;
+}
+.series-folder-panel-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+.series-folder-blurb {
+  margin: 0;
+  padding: 0 18px 12px;
+  color: var(--text-200);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.series-folder-posts {
+  display: grid;
+  gap: 8px;
+  padding: 0 12px 12px;
+  position: relative;
+}
+.series-folder-posts::before {
+  content: "";
+  position: absolute;
+  left: 28px;
+  top: 4px;
+  bottom: 18px;
+  width: 2px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--accent-100) 70%, var(--primary-200));
+}
+.series-folder-posts .post-card-compact {
+  margin-left: 8px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  background: color-mix(in srgb, var(--bg-100) 92%, var(--primary-100));
+  animation: series-card-in .34s ease both;
+}
+.series-folder[open] .series-folder-posts .post-card-compact:nth-child(1) { animation-delay: .04s; }
+.series-folder[open] .series-folder-posts .post-card-compact:nth-child(2) { animation-delay: .1s; }
+.series-folder[open] .series-folder-posts .post-card-compact:nth-child(3) { animation-delay: .16s; }
+.series-folder[open] .series-folder-posts .post-card-compact:nth-child(4) { animation-delay: .22s; }
+@keyframes series-card-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.series-index {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-top: 2px;
+  border-radius: 999px;
+  background: var(--primary-100);
+  color: var(--accent-200);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  position: relative;
+  z-index: 1;
+}
+.compact-copy { min-width: 0; }
+.series-folder-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 18px 16px;
+  font-size: 13px;
+  color: var(--accent-200);
+}
+.series-page-summary {
+  margin: 12px 0 0;
+  max-width: 40rem;
+  color: var(--text-200);
+  font-size: 15px;
+  line-height: 1.75;
+}
+.series-page-list {
+  display: grid;
+  gap: 10px;
+  max-width: 640px;
+  padding-bottom: 64px;
+}
+.series-page-list .post-card-compact {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: start;
+}
 .post-card {
   display: block;
   padding: 28px 32px 26px;
@@ -241,6 +445,12 @@ main { flex: 1; }
   .post-card:hover { transform: none; }
   .post-card-compact .card-summary { transition: none; }
   .geometry-glow { animation: none; }
+  .series-folder,
+  .series-folder-body,
+  .series-folder-stack,
+  .series-folder-chevron,
+  .series-folder-panel { transition: none; }
+  .series-folder-posts .post-card-compact { animation: none; }
   .prose h2, .prose h3 { transition: none; }
   .prose h2.heading-flash,
   .prose h3.heading-flash { animation: none; }

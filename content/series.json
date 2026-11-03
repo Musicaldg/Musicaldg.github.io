@@ -1,0 +1,12 @@
+[
+  {
+    "id": "imitation-learning",
+    "title": "Imitation Learning",
+    "summary": "从行为克隆到偏好优化，理解模仿学习中监督信号如何逐步抽象。",
+    "posts": [
+      "behavior-cloning-plid",
+      "distribution-matching-gail",
+      "irl-rlhf-dpo"
+    ]
+  }
+]

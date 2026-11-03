@@ -335,8 +335,12 @@ GAIL 用一个二分类器区分专家与模型，再把判别器信号转化为
 
 > 让模型产生整体上无法被判别器与专家区分的行为。
 
+这也是通向目标学习的一步：当分布匹配仍不够时，下一篇讨论 [IRL、RLHF 与 DPO](/blog/irl-rlhf-dpo/)。
+
 ## 参考资料
 
 - [课程讲义](https://github.com/enalisnick/enalisnick.github.io/blob/master/ML_with_Humans_Course_Notes.pdf)
+- 系列：[Imitation Learning](/series/imitation-learning/)
 - 系列上一篇：[Behavior Cloning 与 PLID](/blog/behavior-cloning-plid/)
+- 系列下一篇：[IRL、RLHF 与 DPO](/blog/irl-rlhf-dpo/)
 
