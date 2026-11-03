@@ -171,12 +171,22 @@ def build():
         url_path = '/' if path == 'index.html' else '/' + path.removesuffix('index.html')
         write(path, layout.substitute(name=esc(config['name']), github=esc(config['github']), year=dt.date.today().year, title=esc(title), description=esc(description), canonical=esc(config['url'] + url_path), body=body, home_current='aria-current="page"' if current == 'home' else '', blog_current='aria-current="page"' if current == 'blog' else '', og_type=og_type, page_class='article-page' if og_type == 'article' else '', article_assets='<link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/assets/vendor/katex/katex.min.js"></script><script defer src="/assets/article.js"></script>' if og_type == 'article' else ''))
 
-    def rows(selected):
+    def blog_rows(selected):
         return ''.join(f'<a class="post-card" href="/blog/{p["slug"]}/"><div class="card-meta"><time datetime="{p["date"]}">{p["date"]}</time><span>约 {p["minutes"]} 分钟</span></div><h3>{esc(p["title"])}</h3><p>{esc(p["summary"])}</p><span class="card-open">阅读全文 <span aria-hidden="true">↗</span></span></a>' for p in selected) or EMPTY
 
-    home = Template((ROOT / 'templates/home.html').read_text(encoding='utf-8')).substitute(name=esc(config['name']), github=esc(config['github']), description=esc(config['description']), posts=rows(posts[:5]))
+    def home_rows(selected):
+        return ''.join(
+            f'<a class="post-card post-card-compact" href="/blog/{p["slug"]}/" aria-label="{esc(p["title"])}。{esc(p["summary"])}">'
+            f'<time datetime="{p["date"]}">{p["date"]}</time>'
+            f'<h3>{esc(p["title"])}</h3>'
+            f'<p class="card-summary">{esc(p["summary"])}</p>'
+            f'</a>'
+            for p in selected
+        ) or EMPTY
+
+    home = Template((ROOT / 'templates/home.html').read_text(encoding='utf-8')).substitute(posts=home_rows(posts[:5]))
     page('index.html', config['name'], config['description'], home, 'home')
-    page('blog/index.html', '文章 · ' + config['name'], '机器学习笔记。', '<div class="page-intro"><h1>文章</h1></div><section class="post-list">' + rows(posts) + '</section>', 'blog')
+    page('blog/index.html', '文章 · ' + config['name'], '机器学习笔记。', '<div class="page-intro"><h1>文章</h1></div><section class="post-list">' + blog_rows(posts) + '</section>', 'blog')
     page('404.html', '页面未找到 · ' + config['name'], '页面未找到', '<div class="not-found"><h1>404</h1><p>页面未找到</p><a class="text-link" href="/">回到首页 ↗</a></div>')
     for post in posts:
         toc = '<nav class="toc-links" aria-label="文章目录">' + post['toc'] + '</nav>'
