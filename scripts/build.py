@@ -347,7 +347,7 @@ def build():
     def news_list(items, limit=3):
         selected = items[:limit]
         if not selected:
-            return '<p class="dash-empty">暂无近况。</p>'
+            return '<p class="dash-empty">No news yet.</p>'
         rows = []
         for item in selected:
             text = esc(item['text'])
@@ -363,7 +363,7 @@ def build():
         latest_series = series_list[:1]
         parts = [series_folder(series) for series in latest_series]
         parts.extend(compact_card(post) for post in standalone[:2])
-        return ''.join(parts) or '<p class="dash-empty">暂无文章。</p>'
+        return ''.join(parts) or '<p class="dash-empty">No posts yet.</p>'
 
     def blog_feed():
         parts = [series_folder(series, card='roomy', variant='series-folder-roomy') for series in series_list]
