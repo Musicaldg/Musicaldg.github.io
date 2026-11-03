@@ -5,25 +5,31 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="机器学习笔记。">
   <meta name="theme-color" content="#c8e4f4">
-  <meta property="og:title" content="文章 · Musicaldg">
+  <meta property="og:title" content="Blog · Musicaldg">
   <meta property="og:description" content="机器学习笔记。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://musicaldg.github.io/blog/">
-  <title>文章 · Musicaldg</title>
+  <title>Blog · Musicaldg</title>
   <link rel="canonical" href="https://musicaldg.github.io/blog/">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/assets/style.css">
   <link rel="alternate" type="application/rss+xml" title="Musicaldg" href="/feed.xml">
-
+<script defer src="/assets/home.js"></script>
 </head>
 <body class="">
   <a class="skip" href="#main">跳到正文</a>
   <div class="wrap">
     <header class="header">
       <a class="brand" href="/">Musicaldg</a>
-      <nav aria-label="主导航"><a href="/blog/" aria-current="page">文章</a><a class="nav-external" href="https://github.com/Musicaldg" aria-label="GitHub 个人主页">GitHub ↗</a></nav>
+      <nav aria-label="主导航">
+        <a href="/" >Home</a>
+        <a href="/about/" >About</a>
+        <a href="/cv/" >CV</a>
+        <a href="/blog/" aria-current="page">Blog</a>
+        <a class="nav-external" href="https://github.com/Musicaldg" aria-label="GitHub 个人主页">GitHub ↗</a>
+      </nav>
     </header>
-    <main id="main"><div class="page-intro"><h1>文章</h1></div><section class="post-list"><a class="post-card" href="/blog/irl-rlhf-dpo/"><div class="card-meta"><time datetime="2026-11-03">2026-11-03</time><span>约 13 分钟</span></div><h3>IRL、RLHF 与 DPO</h3><p>从逆强化学习出发，说明如何从专家行为与人类偏好学习目标，并连接到 RLHF 与 DPO。</p><span class="card-open">阅读全文 <span aria-hidden="true">↗</span></span></a><a class="post-card" href="/blog/distribution-matching-gail/"><div class="card-meta"><time datetime="2026-11-02">2026-11-02</time><span>约 10 分钟</span></div><h3>Distribution Matching 与 GAIL</h3><p>从轨迹与状态—动作分布匹配出发，说明 Forward KL 为何可能退化为 BC，以及 GAIL 如何用判别器完成分布匹配。</p><span class="card-open">阅读全文 <span aria-hidden="true">↗</span></span></a><a class="post-card" href="/blog/behavior-cloning-plid/"><div class="card-meta"><time datetime="2026-10-20">2026-10-20</time><span>约 10 分钟</span></div><h3>Behavior Cloning 与 PLID</h3><p>说明 Behavior Cloning 的状态分布偏移，并推导 PLID / DAgger 如何用交互式专家标签修正策略。</p><span class="card-open">阅读全文 <span aria-hidden="true">↗</span></span></a><a class="post-card" href="/blog/active-learning/"><div class="card-meta"><time datetime="2026-09-29">2026-09-29</time><span>约 12 分钟</span></div><h3>Active Learning</h3><p>介绍主动学习的基本流程，比较不确定性采样、QBC 和 BALD 三种选样方法。</p><span class="card-open">阅读全文 <span aria-hidden="true">↗</span></span></a></section></main>
+    <main id="main"><div class="page-intro"><h1>Blog</h1></div><section class="blog-feed" aria-label="文章与系列"><details class="series-folder series-folder-roomy"><summary class="series-folder-summary"><span class="series-folder-mark" aria-hidden="true"><span class="series-folder-tab"></span><span class="series-folder-body"></span><span class="series-folder-stack"></span></span><span class="series-folder-copy"><span class="series-folder-kicker">系列</span><span class="series-folder-title">Imitation Learning</span><span class="series-folder-meta">3 篇 · 2026-10-20 — 2026-11-03</span></span><span class="series-folder-chevron" aria-hidden="true"></span></summary><div class="series-folder-panel"><div class="series-folder-panel-inner"><p class="series-folder-blurb">从行为克隆到偏好优化，理解模仿学习中监督信号如何逐步抽象。</p><div class="series-folder-posts"><a class="post-card post-card-roomy" href="/blog/behavior-cloning-plid/"><span class="series-index">01</span><div class="roomy-copy"><div class="card-meta"><time datetime="2026-10-20">2026-10-20</time><span>约 10 分钟</span></div><h3>Behavior Cloning 与 PLID</h3><p>说明 Behavior Cloning 的状态分布偏移，并推导 PLID / DAgger 如何用交互式专家标签修正策略。</p><span class="card-open">阅读全文 <span aria-hidden="true">↗</span></span></div></a><a class="post-card post-card-roomy" href="/blog/distribution-matching-gail/"><span class="series-index">02</span><div class="roomy-copy"><div class="card-meta"><time datetime="2026-11-02">2026-11-02</time><span>约 10 分钟</span></div><h3>Distribution Matching 与 GAIL</h3><p>从轨迹与状态—动作分布匹配出发，说明 Forward KL 为何可能退化为 BC，以及 GAIL 如何用判别器完成分布匹配。</p><span class="card-open">阅读全文 <span aria-hidden="true">↗</span></span></div></a><a class="post-card post-card-roomy" href="/blog/irl-rlhf-dpo/"><span class="series-index">03</span><div class="roomy-copy"><div class="card-meta"><time datetime="2026-11-03">2026-11-03</time><span>约 13 分钟</span></div><h3>IRL、RLHF 与 DPO</h3><p>从逆强化学习出发，说明如何从专家行为与人类偏好学习目标，并连接到 RLHF 与 DPO。</p><span class="card-open">阅读全文 <span aria-hidden="true">↗</span></span></div></a></div><a class="series-folder-link" href="/series/imitation-learning/">打开系列页 <span aria-hidden="true">↗</span></a></div></div></details><h2 class="blog-section-title">其他文章</h2><div class="post-list"><a class="post-card" href="/blog/active-learning/"><div class="card-meta"><time datetime="2026-09-29">2026-09-29</time><span>约 12 分钟</span></div><h3>Active Learning</h3><p>介绍主动学习的基本流程，比较不确定性采样、QBC 和 BALD 三种选样方法。</p><span class="card-open">阅读全文 <span aria-hidden="true">↗</span></span></a></div></section></main>
     <footer class="footer"><span>© 2026 Musicaldg</span><a href="/feed.xml">RSS</a></footer>
   </div>
 </body>

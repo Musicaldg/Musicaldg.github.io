@@ -1,0 +1,17 @@
+[
+  {
+    "date": "2026-11-03",
+    "text": "发布 Imitation Learning 系列第三篇：IRL、RLHF 与 DPO。",
+    "href": "/blog/irl-rlhf-dpo/"
+  },
+  {
+    "date": "2026-11-02",
+    "text": "更新 Distribution Matching 与 GAIL，并整理仿作学习系列。",
+    "href": "/blog/distribution-matching-gail/"
+  },
+  {
+    "date": "2026-10-20",
+    "text": "发布 Behavior Cloning 与 PLID。",
+    "href": "/blog/behavior-cloning-plid/"
+  }
+]

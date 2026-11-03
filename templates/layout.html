@@ -21,7 +21,13 @@ $article_assets
   <div class="wrap">
     <header class="header">
       <a class="brand" href="/">$name</a>
-      <nav aria-label="主导航"><a href="/blog/" $blog_current>文章</a><a class="nav-external" href="$github" aria-label="GitHub 个人主页">GitHub ↗</a></nav>
+      <nav aria-label="主导航">
+        <a href="/" $home_current>Home</a>
+        <a href="/about/" $about_current>About</a>
+        <a href="/cv/" $cv_current>CV</a>
+        <a href="/blog/" $blog_current>Blog</a>
+        <a class="nav-external" href="$github" aria-label="GitHub 个人主页">GitHub ↗</a>
+      </nav>
     </header>
     <main id="main">$body</main>
     <footer class="footer"><span>© $year $name</span><a href="/feed.xml">RSS</a></footer>
