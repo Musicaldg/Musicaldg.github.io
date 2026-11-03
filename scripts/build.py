@@ -174,7 +174,7 @@ def build():
     def rows(selected):
         return ''.join(f'<a class="post-card" href="/blog/{p["slug"]}/"><div class="card-meta"><time datetime="{p["date"]}">{p["date"]}</time><span>约 {p["minutes"]} 分钟</span></div><h3>{esc(p["title"])}</h3><p>{esc(p["summary"])}</p><span class="card-open">阅读全文 <span aria-hidden="true">↗</span></span></a>' for p in selected) or EMPTY
 
-    home = Template((ROOT / 'templates/home.html').read_text(encoding='utf-8')).substitute(name=esc(config['name']), github=esc(config['github']), posts=rows(posts[:5]))
+    home = Template((ROOT / 'templates/home.html').read_text(encoding='utf-8')).substitute(name=esc(config['name']), github=esc(config['github']), description=esc(config['description']), posts=rows(posts[:5]))
     page('index.html', config['name'], config['description'], home, 'home')
     page('blog/index.html', '文章 · ' + config['name'], '机器学习笔记。', '<div class="page-intro"><h1>文章</h1></div><section class="post-list">' + rows(posts) + '</section>', 'blog')
     page('404.html', '页面未找到 · ' + config['name'], '页面未找到', '<div class="not-found"><h1>404</h1><p>页面未找到</p><a class="text-link" href="/">回到首页 ↗</a></div>')
