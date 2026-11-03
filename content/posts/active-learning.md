@@ -278,4 +278,4 @@ $$
 
 - [课程讲义](https://github.com/enalisnick/enalisnick.github.io/blob/master/ML_with_Humans_Course_Notes.pdf)
 - [BALD 论文](https://arxiv.org/abs/1112.5745)
-- 系列后续：[Behavior Cloning 与 PLID](/blog/behavior-cloning-plid/)、[Distribution Matching 与 GAIL](/blog/distribution-matching-gail/)
+- 系列后续：[Imitation Learning](/series/imitation-learning/)

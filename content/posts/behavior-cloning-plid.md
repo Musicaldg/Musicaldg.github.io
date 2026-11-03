@@ -345,6 +345,6 @@ $$
 ## 参考资料
 
 - [课程讲义](https://github.com/enalisnick/enalisnick.github.io/blob/master/ML_with_Humans_Course_Notes.pdf)
-- 系列上一篇：[Active Learning](/blog/active-learning/)
+- 系列：[Imitation Learning](/series/imitation-learning/)
 - 系列下一篇：[Distribution Matching 与 GAIL](/blog/distribution-matching-gail/)
 
