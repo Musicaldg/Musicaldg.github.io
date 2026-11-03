@@ -154,10 +154,46 @@ def read_posts():
     return sorted(posts, key=lambda x: (x['date'], x['slug']), reverse=True)
 
 
+def read_series(posts_by_slug):
+    path = ROOT / 'content/series.json'
+    if not path.exists():
+        return []
+    catalog = json.loads(path.read_text(encoding='utf-8'))
+    series_list = []
+    for entry in catalog:
+        for key in ('id', 'title', 'summary', 'posts'):
+            if not entry.get(key):
+                raise ValueError(f'series.json: 缺少 {key}')
+        if not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', entry['id']):
+            raise ValueError(f'series.json: id 请使用小写英文、数字和连字符')
+        members = []
+        for slug in entry['posts']:
+            post = posts_by_slug.get(slug)
+            if not post:
+                raise ValueError(f'series.json: 找不到文章 {slug}')
+            members.append(post)
+        if not members:
+            raise ValueError(f'series.json: {entry["id"]} 没有文章')
+        series_list.append({
+            'id': entry['id'],
+            'title': entry['title'],
+            'summary': entry['summary'],
+            'posts': members,
+            'count': len(members),
+            'start': min(p['date'] for p in members),
+            'end': max(p['date'] for p in members),
+        })
+    return series_list
+
+
 def build():
     config = json.loads((ROOT / 'site.json').read_text(encoding='utf-8'))
     layout = Template((ROOT / 'templates/layout.html').read_text(encoding='utf-8'))
     posts = read_posts()
+    posts_by_slug = {p['slug']: p for p in posts}
+    series_list = read_series(posts_by_slug)
+    series_slugs = {slug for series in series_list for slug in (p['slug'] for p in series['posts'])}
+    standalone = [p for p in posts if p['slug'] not in series_slugs]
     previous = json.loads((ROOT / 'generated-files.json').read_text()) if (ROOT / 'generated-files.json').exists() else []
     generated = []
 
@@ -167,27 +203,63 @@ def build():
         target.write_text(content.rstrip() + '\n', encoding='utf-8')
         generated.append(path)
 
-    def page(path, title, description, body, current='', og_type='website'):
+    def page(path, title, description, body, current='', og_type='website', extra_assets=''):
         url_path = '/' if path == 'index.html' else '/' + path.removesuffix('index.html')
-        write(path, layout.substitute(name=esc(config['name']), github=esc(config['github']), year=dt.date.today().year, title=esc(title), description=esc(description), canonical=esc(config['url'] + url_path), body=body, home_current='aria-current="page"' if current == 'home' else '', blog_current='aria-current="page"' if current == 'blog' else '', og_type=og_type, page_class='article-page' if og_type == 'article' else '', article_assets='<link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/assets/vendor/katex/katex.min.js"></script><script defer src="/assets/article.js"></script>' if og_type == 'article' else ''))
+        article_assets = '<link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/assets/vendor/katex/katex.min.js"></script><script defer src="/assets/article.js"></script>' if og_type == 'article' else ''
+        write(path, layout.substitute(name=esc(config['name']), github=esc(config['github']), year=dt.date.today().year, title=esc(title), description=esc(description), canonical=esc(config['url'] + url_path), body=body, home_current='aria-current="page"' if current == 'home' else '', blog_current='aria-current="page"' if current == 'blog' else '', og_type=og_type, page_class='article-page' if og_type == 'article' else '', article_assets=article_assets + extra_assets))
 
     def blog_rows(selected):
         return ''.join(f'<a class="post-card" href="/blog/{p["slug"]}/"><div class="card-meta"><time datetime="{p["date"]}">{p["date"]}</time><span>约 {p["minutes"]} 分钟</span></div><h3>{esc(p["title"])}</h3><p>{esc(p["summary"])}</p><span class="card-open">阅读全文 <span aria-hidden="true">↗</span></span></a>' for p in selected) or EMPTY
 
-    def home_rows(selected):
-        return ''.join(
-            f'<a class="post-card post-card-compact" href="/blog/{p["slug"]}/" aria-label="{esc(p["title"])}。{esc(p["summary"])}">'
-            f'<time datetime="{p["date"]}">{p["date"]}</time>'
-            f'<h3>{esc(p["title"])}</h3>'
-            f'<p class="card-summary">{esc(p["summary"])}</p>'
+    def compact_card(post, index=None):
+        index_html = f'<span class="series-index">{index:02d}</span>' if index is not None else ''
+        return (
+            f'<a class="post-card post-card-compact" href="/blog/{post["slug"]}/" aria-label="{esc(post["title"])}。{esc(post["summary"])}">'
+            f'{index_html}'
+            f'<div class="compact-copy"><time datetime="{post["date"]}">{post["date"]}</time>'
+            f'<h3>{esc(post["title"])}</h3>'
+            f'<p class="card-summary">{esc(post["summary"])}</p></div>'
             f'</a>'
-            for p in selected
-        ) or EMPTY
+        )
 
-    home = Template((ROOT / 'templates/home.html').read_text(encoding='utf-8')).substitute(posts=home_rows(posts[:5]))
-    page('index.html', config['name'], config['description'], home, 'home')
+    def series_folder(series, open_by_default=False):
+        span = series['start'] if series['start'] == series['end'] else f'{series["start"]} — {series["end"]}'
+        cards = ''.join(compact_card(post, index=i) for i, post in enumerate(series['posts'], 1))
+        open_attr = ' open' if open_by_default else ''
+        return (
+            f'<details class="series-folder"{open_attr}>'
+            f'<summary class="series-folder-summary">'
+            f'<span class="series-folder-mark" aria-hidden="true"><span class="series-folder-tab"></span><span class="series-folder-body"></span><span class="series-folder-stack"></span></span>'
+            f'<span class="series-folder-copy"><span class="series-folder-kicker">系列</span>'
+            f'<span class="series-folder-title">{esc(series["title"])}</span>'
+            f'<span class="series-folder-meta">{series["count"]} 篇 · {span}</span></span>'
+            f'<span class="series-folder-chevron" aria-hidden="true"></span>'
+            f'</summary>'
+            f'<div class="series-folder-panel"><div class="series-folder-panel-inner">'
+            f'<p class="series-folder-blurb">{esc(series["summary"])}</p>'
+            f'<div class="series-folder-posts">{cards}</div>'
+            f'<a class="series-folder-link" href="/series/{series["id"]}/">打开系列页 <span aria-hidden="true">↗</span></a>'
+            f'</div></div></details>'
+        )
+
+    def home_feed():
+        parts = [series_folder(series) for series in series_list]
+        parts.extend(compact_card(post) for post in standalone[:4])
+        return ''.join(parts) or EMPTY
+
+    home = Template((ROOT / 'templates/home.html').read_text(encoding='utf-8')).substitute(feed=home_feed())
+    page('index.html', config['name'], config['description'], home, 'home', extra_assets='<script defer src="/assets/home.js"></script>')
     page('blog/index.html', '文章 · ' + config['name'], '机器学习笔记。', '<div class="page-intro"><h1>文章</h1></div><section class="post-list">' + blog_rows(posts) + '</section>', 'blog')
     page('404.html', '页面未找到 · ' + config['name'], '页面未找到', '<div class="not-found"><h1>404</h1><p>页面未找到</p><a class="text-link" href="/">回到首页 ↗</a></div>')
+    for series in series_list:
+        cards = ''.join(compact_card(post, index=i) for i, post in enumerate(series['posts'], 1))
+        body = (
+            f'<div class="page-intro"><a class="text-link" href="/">← 首页</a>'
+            f'<p class="series-page-kicker">系列</p><h1>{esc(series["title"])}</h1>'
+            f'<p class="series-page-summary">{esc(series["summary"])}</p></div>'
+            f'<section class="series-page-list" aria-label="{esc(series["title"])} 文章">{cards}</section>'
+        )
+        page(f'series/{series["id"]}/index.html', series['title'] + ' · ' + config['name'], series['summary'], body, 'home')
     for post in posts:
         toc = '<nav class="toc-links" aria-label="文章目录">' + post['toc'] + '</nav>'
         body = f'<div class="article-layout"><article class="article"><a class="text-link" href="/blog/">← 全部文章</a><h1>{esc(post["title"])}</h1><div class="article-meta"><time datetime="{post["date"]}">{post["date"]}</time><span>预计阅读 {post["minutes"]} 分钟</span></div><details class="mobile-toc"><summary>目录</summary>{toc}</details><div class="prose">{post["body"]}</div></article><aside class="desktop-toc"><div class="toc-title">目录</div>{toc}</aside></div>'
@@ -209,7 +281,7 @@ def build():
     write('sitemap.xml', ET.tostring(sitemap, encoding='utf-8', xml_declaration=True).decode('utf-8'))
     write('robots.txt', 'User-agent: *\nAllow: /\nSitemap: ' + config['url'] + '/sitemap.xml')
     for obsolete in set(previous) - set(generated):
-        if obsolete.startswith('blog/') and obsolete.endswith('/index.html'):
+        if obsolete.endswith('/index.html') and (obsolete.startswith('blog/') or obsolete.startswith('series/')):
             target = ROOT / obsolete
             if target.exists():
                 target.unlink()
